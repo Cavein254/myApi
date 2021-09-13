@@ -7,7 +7,7 @@ jobs:
     working_directory: ~/src
     docker:
       - image: circleci/node:14.17.6
-      - image: mongo:5.0.2-xenial
+      - image: mongo
     steps:
       # check out your code repository
       - checkout
