@@ -1,0 +1,32 @@
+version: 2.1
+
+jobs:
+  build:
+    environment:
+      NODE_ENV: "test"
+    working_directory: ~/src
+    docker:
+      - image: circleci/node:14.17.6
+      - image: mongo:5.0.2-xenial
+    steps:
+      # check out your code repository
+      - checkout
+      - restore_cache:
+          key: v1-dependencies-{{ checksum "package.json" }}
+
+      - run:
+          name: Install project dependencies
+          command: npm install --verbose
+
+      - save_cache:
+          key: v1-dependencies-{{ checksum "package.json"}}
+          paths:
+            - node_modules
+
+      - run:
+          name: Run tests
+          command: npm run test --runInBand --detectOpenHandles
+
+      - run:
+          name: Run Coverrage
+          command: npm run test:cov
